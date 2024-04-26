@@ -1,0 +1,194 @@
+// Variables
+:root {
+  --space: 1rem;
+}
+
+@media (min-width: 800px) {
+  :root {
+    --space: 2rem;
+  }
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: FranklinGothic, Scheherazade, sans-serif, vbText;
+  line-height: 1.8;
+}
+
+section > span {
+  display: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  counter-reset: counter-level-1;
+
+  section {
+    margin-bottom: calc(3* var(--space));
+    width: 100%;
+    max-width: 1050px;
+    background: #fff;
+
+    // Counter increments
+    & > section {
+      h2 {
+        counter-increment: counter-level-1;
+        counter-reset: counter-level-2;
+
+        &:before {
+          content: counter(counter-level-1) ". ";
+        }
+      }
+
+      & > section {
+        h3 {
+          counter-increment: counter-level-2;
+          counter-reset: counter-level-3;
+
+          &:before {
+            content: counter(counter-level-1) "." counter(counter-level-2) ". ";
+          }
+        }
+
+        & > section {
+          h4 {
+            counter-increment: counter-level-3;
+            counter-reset: counter-level-4;
+
+            &:before {
+              content: counter(counter-level-1) "." counter(counter-level-2) "." counter(counter-level-3) ". ";
+            }
+          }
+
+          & > section {
+            h5 {
+              counter-increment: counter-level-4;
+              counter-reset: counter-level-5;
+            }
+            h5:before {
+              content: counter(counter-level-1) "." counter(counter-level-2) "." counter(counter-level-3) "." counter(counter-level-4) ". ";
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.page-break, .break-before, .page-break-before {
+  page-break-before: always;
+}
+
+ul, ul li, ol, ol li {
+  break-inside: auto;
+  page-break-inside: auto;
+}
+
+ul li {
+  margin-bottom: .5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Avalon, Scheherazade, sans-serif, vbHeadline;
+}
+
+h1 {
+  font-size: 3rem !important;
+  font-weight: 700;
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: calc(1 * var(--space));
+}
+
+h3 {
+  font-size: 2.25rem;
+  margin-bottom: calc(0.75 * var(--space));
+}
+
+h4 {
+  font-size: 2rem;
+  margin-bottom: calc(0.66 * var(--space));
+}
+
+h5 {
+  font-size: 1.75rem;
+  margin-bottom: calc(0.6 * var(--space));
+}
+
+p {
+  margin-bottom: 1.5rem;
+  margin-top: 0.2rem;
+  font-size: 1.1rem;
+}
+
+img {
+  height: auto !important;
+  border: 0;
+  display: block;
+  width: 100%;
+  max-width: 100% !important;
+  vertical-align: middle;
+  margin-bottom: calc(1 * var(--space));
+}
+
+.paragraph {
+  margin-bottom: calc(1.5 * var(--space));
+  display: flex;
+  width: 100%;
+
+  &--type--manual-text-image-field-text {
+    width: 95%;
+    padding-right: 5%;
+  }
+
+  &--type--manual-text-image-field-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+nav {
+  position: fixed;
+  left: 20px;
+  max-width: 15%;
+  display: inline-block;
+  width: auto;
+  background: none;
+  margin-bottom: 0;
+
+  li, summary {
+    margin-bottom: 0.2rem;
+  }
+
+  ol {
+    margin-bottom: 0.4rem !important;
+  }
+
+  a {
+    color: #000;
+    word-wrap: break-word;
+    text-decoration: underline;
+
+    &.active {
+      color:  #b90f28;
+    }
+
+    &:hover{
+      color: #b90f28;
+    }
+  }
+
+  ol li::marker {
+    content: counters(list-item, '.') '. ';
+  }
+}

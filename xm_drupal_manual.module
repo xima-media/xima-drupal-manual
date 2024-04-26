@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function xm_drupal_manual_theme($existing, $type, $theme, $path)
+{
+  $book_export_html = $existing['book_export_html'];
+  $book_node_export_html = $existing['book_node_export_html'];
+  $paragraph = $existing['paragraph'];
+
+  $book_export_html['template'] = 'book-export-html--manual';
+  unset($book_export_html['path']);
+
+  $book_node_export_html['template'] = 'book-node-export-html--manual';
+  unset($book_node_export_html['path']);
+
+  $paragraph['template'] = 'paragraph--manual';
+  unset($paragraph['path']);
+
+  return [
+    'book_export_html__manual' => $book_export_html,
+    'book_node_export_html__manual' => $book_node_export_html,
+    'paragraph__manual' => $paragraph
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function xm_drupal_manual_theme_suggestions_book_node_export_html_alter(array &$suggestions, array &$variables, $hook)
+{
+  $suggestions[] = 'book_node_export_html__manual';
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function xm_drupal_manual_theme_suggestions_book_export_html_alter(array &$suggestions, array &$variables, $hook)
+{
+  $suggestions[] = 'book_export_html__manual';
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function xm_drupal_manual_theme_suggestions_paragraph_alter(array &$suggestions, array &$variables, $hook)
+{
+  $suggestions[] = 'paragraph__manual';
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function xm_drupal_manual_local_tasks_alter(&$local_tasks)
+{
+  // remove outline tab for book
+  $route = Drupal::routeMatch();
+  $type = $route->getParameter('node')->getType();
+
+  if ($type != 'book'){
+    unset($local_tasks['entity.node.book_outline_form']);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function xm_drupal_manual_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  // show book outline menu only in right tab
+  if (!in_array($form_id, ['node_book_edit_form','node_book_form'], true)) {
+    unset($form['book']);
+  }
+}

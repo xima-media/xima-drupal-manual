@@ -1,0 +1,30 @@
+{
+    "name": "xima/xm_drupal_manual",
+    "description": "This module provides a manual for Drupal using the export route of the books core module.",
+    "type": "drupal-module",
+    "version": "0.1.0",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Dennis Patzer",
+            "email": "dennis.patzer@xima.de"
+        },
+        {
+            "name": "Johann-Georg Nitsche",
+            "email": "johann-georg.nitsche@xima.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.2",
+        "drupal/core": "^10.2"
+    },
+    "require-dev": {
+        "rector/rector": "^1.0"
+    },
+    "scripts": {
+        "php:check": [
+            "vendor/bin/rector process --dry-run"
+        ]
+    }
+}

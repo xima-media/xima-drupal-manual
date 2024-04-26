@@ -1,0 +1,8 @@
+name: XIMA Drupal Manual
+type: module
+description: This module provides a manual for Drupal using the export route of the books core module.
+core_version_requirement: ^10
+package: Custom
+
+dependencies:
+  - drupal:book

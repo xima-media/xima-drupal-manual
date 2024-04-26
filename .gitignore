@@ -1,0 +1,18 @@
+# Frontend
+node_modules
+.sass-cache/
+*.css.map
+
+# ide
+.idea
+.vs_code
+
+# os
+Thumbs.db
+.DS_Store
+
+# composer
+/vendor
+composer.lock
+composer.json~
+composer.phar
