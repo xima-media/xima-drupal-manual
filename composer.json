@@ -2,7 +2,7 @@
     "name": "xima/xm_drupal_manual",
     "description": "This module provides a manual for Drupal using the export route of the books core module.",
     "type": "drupal-module",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
