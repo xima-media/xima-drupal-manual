@@ -54,13 +54,8 @@ function xm_drupal_manual_theme_suggestions_paragraph_alter(array &$suggestions,
  */
 function xm_drupal_manual_local_tasks_alter(&$local_tasks)
 {
-  // remove outline tab for book
-  $route = Drupal::routeMatch();
-  $type = $route->getParameter('node')->getType();
-
-  if ($type != 'book'){
+    // remove outline tab (Gliederung) for all nodes
     unset($local_tasks['entity.node.book_outline_form']);
-  }
 }
 
 /**
