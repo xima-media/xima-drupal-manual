@@ -2,7 +2,6 @@
   "name": "manual",
   "private": true,
   "scripts": {
-    "livereload": "livereload --exclusions node_modules/ --exts 'css,js,twig,theme,apng,avif,gif,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp'",
     "sass": "sass --source-map --error-css --style=compressed --load-path=node_modules scss/base.scss:dist/css/base.css",
     "js": "./node_modules/.bin/esbuild js/*.js --outdir=dist/js --minify"
   },
