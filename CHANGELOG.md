@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - error getType() on null for local_tasks on node creation
+- duplicated title display in book export context
 
 ## [0.1.1] - 2024-04-26
 

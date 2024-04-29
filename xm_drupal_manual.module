@@ -5,24 +5,29 @@
  */
 function xm_drupal_manual_theme($existing, $type, $theme, $path)
 {
-  $book_export_html = $existing['book_export_html'];
-  $book_node_export_html = $existing['book_node_export_html'];
-  $paragraph = $existing['paragraph'];
+    $book_export_html = $existing['book_export_html'];
+    $book_node_export_html = $existing['book_node_export_html'];
+    $paragraph = $existing['paragraph'];
+    $field__node__title__book = $existing['field__node__title'];
 
-  $book_export_html['template'] = 'book-export-html--manual';
-  unset($book_export_html['path']);
+    $book_export_html['template'] = 'book-export-html--manual';
+    unset($book_export_html['path']);
 
-  $book_node_export_html['template'] = 'book-node-export-html--manual';
-  unset($book_node_export_html['path']);
+    $book_node_export_html['template'] = 'book-node-export-html--manual';
+    unset($book_node_export_html['path']);
 
-  $paragraph['template'] = 'paragraph--manual';
-  unset($paragraph['path']);
+    $paragraph['template'] = 'paragraph--manual';
+    unset($paragraph['path']);
 
-  return [
-    'book_export_html__manual' => $book_export_html,
-    'book_node_export_html__manual' => $book_node_export_html,
-    'paragraph__manual' => $paragraph
-  ];
+    $field__node__title__book['template'] = 'field--node--title--book';
+    unset($field__node__title__book['path']);
+
+    return [
+        'book_export_html__manual' => $book_export_html,
+        'book_node_export_html__manual' => $book_node_export_html,
+        'paragraph__manual' => $paragraph,
+        'field__node__title__book' => $field__node__title__book,
+    ];
 }
 
 /**
