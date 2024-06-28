@@ -13,15 +13,11 @@ return static function (RectorConfig $rectorConfig): void {
 
   $rectorConfig->skip([
     'vendor/',
-    Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector::class,
-    Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector::class,
     Rector\CodingStyle\Rector\If_\NullableCompareToNullRector::class,
     Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector::class,
     Rector\CodingStyle\Rector\FuncCall\StrictArraySearchRector::class,
     Rector\Php81\Rector\Array_\FirstClassCallableRector::class,
-    Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector::class,
-    Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector::class,
-    Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class
+    Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector::class
   ]);
 
   $rectorConfig->sets([
