@@ -1,67 +1,100 @@
-function generateNavigation() {
-  // Attempt to select an existing main element
-  let main = document.querySelector('main');
+function generateNestedNavigation() {
+  const headers = document.querySelectorAll('section h2, section h3, section h4, section h5, section h6');
+  const nav = document.createElement('nav');
+  nav.classList.add('manual-navigation');
+  let currentUl = document.createElement('ul');
+  nav.appendChild(currentUl);
 
-  // If there isn't a main element, create one and append it to the body
-  if (!main) {
-    main = document.createElement('main');
-    document.body.appendChild(main);
-  }
+  let numbering = [0, 0, 0, 0, 0]; // Array to keep track of counters for h2 to h6
+  let lastLevel = 2; // Starting with h2 elements
+  const headingToNavLink = new Map(); // Map to track heading IDs to nav links
 
-  const baseUrl = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
-  const navContainer = document.createElement('nav');
-  // Append the nav container to the main element instead of the body
-  main.insertBefore(navContainer, main.firstChild);
+  headers.forEach((header) => {
+    const level = parseInt(header.tagName.substring(1)); // Get level (2 for h2, 3 for h3, etc.)
+    numbering[level - 2]++; // Increment the counter for this level
 
-  const navList = document.createElement('ol');
-  navContainer.appendChild(navList);
+    // Reset lower levels when a higher level tag is encountered
+    for (let i = level - 1; i < numbering.length; i++) {
+      numbering[i] = 0;
+    }
 
-  function createNavItem(section) {
-    // Create a link for the current section
-    const link = document.createElement('a');
-    link.href = baseUrl + '#' + section.id;
-    link.textContent = section.querySelector('h1, h2, h3, h4, h5, h6').textContent.trim();
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const headerId = header.textContent.replace(/\s+/g, '_').toLowerCase();
 
-    const listItem = document.createElement('li');
-    listItem.appendChild(link);
-    return listItem;
-  }
+    header.id = headerId;
+    a.href = `#${headerId}`;
+    a.textContent = numbering.slice(0, level - 1).join('.') + '. ' + header.textContent;
+    a.classList.add('nav-link'); // Add a class for styling
 
-  function buildNavigationList(container, sections) {
-    sections.forEach(section => {
-      const item = createNavItem(section);
-      container.appendChild(item);
+    // Store a reference to the link
+    headingToNavLink.set(headerId, a);
 
-      // Check if there are nested sections within the current section
-      const nestedSections = Array.from(section.children).filter(child => child.tagName.toLowerCase() === 'section');
-      if (nestedSections.length > 0) {
-        const sublist = document.createElement('ul');
-        item.appendChild(sublist);
-        buildNavigationList(sublist, nestedSections);
+    a.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default anchor link behavior
+      document.getElementById(headerId).scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling
+        block: 'start' // Aligns the scrolled-to element at the top of the viewport
+      });
+    });
+    li.appendChild(a);
+
+    if (level > lastLevel) {
+      const newUl = document.createElement('ul');
+      currentUl.lastChild.appendChild(newUl);
+      currentUl = newUl;
+    } else if (level < lastLevel) {
+      // Climb up the ul hierarchy
+      for (let i = level; i < lastLevel; i++) {
+        currentUl = currentUl.parentNode.parentNode;
+      }
+    }
+
+    currentUl.appendChild(li);
+    lastLevel = level;
+  });
+
+  // Insert the <nav> element after each <h1>
+  const h1Elements = document.querySelectorAll('section h1');
+  h1Elements.forEach(h1 => {
+    h1.insertAdjacentElement('afterend', nav); // Insert the nav element after each <h1>
+  });
+
+  // Set up Intersection Observer
+  let currentActiveNavLink = null; // Track the currently active navigation link
+  let lastEntry = null; // To keep track of the last intersecting entry
+
+  const observer = new IntersectionObserver((entries) => {
+    let closestEntry = null;
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Determine if this entry should be considered as closest
+        if (!closestEntry || entry.boundingClientRect.top < closestEntry.boundingClientRect.top) {
+          closestEntry = entry;
+        }
       }
     });
-  }
 
-  // Find the top-level section that contains the h1, then start with its immediate section children
-  const topLevelSection = document.querySelector('section h1').closest('section');
-  const sectionsUnderTopLevel = Array.from(topLevelSection.children).filter(child => child.tagName.toLowerCase() === 'section');
-  buildNavigationList(navList, sectionsUnderTopLevel);
-}
+    if (closestEntry) {
+      // Update the active class based on the closest entry
+      const id = closestEntry.target.id;
+      const navLink = headingToNavLink.get(id);
 
-function activateNavigationLinks() {
-  const navLinks = document.querySelectorAll('nav a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
-    });
+      if (currentActiveNavLink && currentActiveNavLink !== navLink) {
+        currentActiveNavLink.classList.remove('active');
+      }
+
+      navLink.classList.add('active');
+      currentActiveNavLink = navLink;
+    }
+  }, {
+    threshold: 0.5, // Trigger when at least 50% of the heading is visible
+    rootMargin: '0px 0px -50% 0px' // Adjust the margins if needed
   });
-}
-function toggleNav() {
-  var nav = document.querySelector("nav");
-  if (nav.style.display === "block") {
-    nav.style.display = "none";
-  } else {
-    nav.style.display = "block";
-  }
+
+  // Observe each heading
+  headers.forEach(heading => {
+    observer.observe(heading);
+  });
 }
