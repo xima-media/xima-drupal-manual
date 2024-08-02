@@ -62,7 +62,6 @@ function generateNestedNavigation() {
 
   // Set up Intersection Observer
   let currentActiveNavLink = null; // Track the currently active navigation link
-  let lastEntry = null; // To keep track of the last intersecting entry
 
   const observer = new IntersectionObserver((entries) => {
     let closestEntry = null;
