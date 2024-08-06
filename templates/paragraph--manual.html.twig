@@ -39,24 +39,24 @@
  */
 #}
 {%
-  set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished'
+    set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
 ]
 %}
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }} class="frame">
-    {% block content %}
-      {% if content.field_text_formatted_long is defined and content.field_text_formatted_long is not empty %}
-        <div class="paragraph--type--manual-text-image-field-text">
-          {{ content.field_text_formatted_long }}
-        </div>
-      {% endif %}
-      <div class="paragraph--type--manual-text-image-field-media">
-        {{ content.field_media }}
-      </div>
-    {% endblock %}
-  </div>
+    <div{{ attributes.addClass(classes) }} class="frame">
+        {% block content %}
+            {% if content.field_text_formatted_long is defined and content.field_text_formatted_long is not empty %}
+                <div class="paragraph--type--manual-text-image-field-text">
+                    {{ content.field_text_formatted_long }}
+                </div>
+            {% endif %}
+            <div class="paragraph--type--manual-text-image-field-media">
+                {{ content.field_media_2 }}
+            </div>
+        {% endblock %}
+    </div>
 {% endblock paragraph %}
