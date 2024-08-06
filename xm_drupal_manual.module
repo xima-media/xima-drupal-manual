@@ -51,9 +51,10 @@ function xm_drupal_manual_theme_suggestions_book_export_html_alter(array &$sugge
  */
 function xm_drupal_manual_theme_suggestions_paragraph_alter(array &$suggestions, array &$variables, $hook)
 {
-  $suggestions[] = 'paragraph__manual';
+    if(str_contains(\Drupal::service('path.current')->getPath(), 'book')) {
+        $suggestions[] = 'paragraph__manual';
+    }
 }
-
 /**
  * Implements hook_local_tasks_alter().
  */
@@ -80,5 +81,5 @@ function xm_drupal_manual_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
 function xm_drupal_manual_preprocess_book_export_html(&$variables)
 {
     // path to module
-    $variables['path'] = Drupal::service('extension.list.module')->getPath('xm_drupal_manual');
+    $variables['path'] = \Drupal::service('extension.list.module')->getPath('xm_drupal_manual');
 }
