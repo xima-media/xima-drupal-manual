@@ -26,13 +26,15 @@
   <base href="{{ base_url }}" />
   <link type="text/css" rel="stylesheet" href='{{ base_url }}/{{ path }}/dist/css/base.css'/>
   <script src="{{ base_url }}/{{ path }}/dist/js/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-  <script>
-    window.addEventListener('load', function() {
-      generateNestedNavigation();
-    });
-  </script>
+<script>
+  window.addEventListener('load', function() {
+    generateNestedNavigation();
+    backToTop();
+  });
+</script>
 
 {#
 The given node is embedded to its absolute depth in a top level section.
@@ -44,18 +46,19 @@ to be exported as printer-friendly HTML.
 #}
 
 {#  <button class="hamburger" onclick="toggleNav()">☰ Menu</button>#}
-    <main>
-      <div class="container">
-        <div class="book-section-wrapper">
-          {% if depth > 1 %}{% for i in 1..depth - 1 %}
-            <div>
-              {% endfor %}{% endif %}
-              {{ contents }}
-              {% if depth > 1 %}{% for i in 1..depth - 1 %}
-            </div>
-          {% endfor %}{% endif %}
-        </div>
+<main>
+  <div class="container">
+    <div class="book-section-wrapper">
+      {% if depth > 1 %}{% for i in 1..depth - 1 %}
+      <div>
+        {% endfor %}{% endif %}
+        {{ contents }}
+        {% if depth > 1 %}{% for i in 1..depth - 1 %}
       </div>
-    </main>
-  </body>
+      {% endfor %}{% endif %}
+    </div>
+    <button id="back-to-top-btn" title="Go to top">↑</button>
+  </div>
+</main>
+</body>
 </html>
