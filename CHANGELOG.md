@@ -2,14 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [0.1.3] - 2024-09-17
+
+## Added
+
+- responsive styling of manual
+- responsive navigation to manual
 
 ### Fixed
 
 - error getType() on null for local_tasks on node creation
 - duplicated title display in book export context
-- unnecessary livereload script (removed)
-- responsive navigation styling
+- unused livereload script
 
 ## [0.1.2] - 2024-06-28
 
