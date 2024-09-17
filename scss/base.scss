@@ -1,11 +1,72 @@
-// Variables
+Variables
 :root {
   --space: 1rem;
+}
+
+html, body {
+  overflow-x: hidden; // Prevent horizontal scrolling
+  scroll-behavior: smooth;
+  word-wrap: break-word;
 }
 
 @media (min-width: 800px) {
   :root {
     --space: 2rem;
+  }
+}
+
+.nav-container {
+  position: relative;
+
+  // Hamburger menu button styling
+  .hamburger-menu {
+    width: 100%;
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    box-sizing: border-box;
+
+    @media (max-width: 1600px) {
+      display: block;
+    }
+
+    @media (min-width: 450px) {
+      width: 45px;
+      font-size: 2rem;
+
+    }
+  }
+
+  // Navigation styling for screens larger than 1600px
+  .manual-navigation {
+    display: block;
+
+    @media (max-width: 1600px) {
+      display: none;
+      background-color: #fff;
+      padding: 10px;
+      z-index: 999;
+    }
+
+    &.open {
+      display: block;
+    }
+  }
+}
+
+@media (min-width: 1600px) {
+  .hamburger-menu {
+    display: none;
+  }
+
+  .manual-navigation {
+    display: block;
   }
 }
 
@@ -23,15 +84,94 @@ section > span {
 }
 
 main {
+
+  @media (max-width: 770px) {
+    display: block;
+  }
+
   display: flex;
   flex-direction: column;
   align-items: center;
   counter-reset: counter-level-1;
 
+  .container {
+    display: block;
+    margin: 2.5%;
+
+    #back-to-top-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none; // Hidden by default
+      background-color: #03A19E;
+      color: white;
+      border: none;
+      outline: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 18px;
+
+      &:hover {
+        background-color: #b90f28;
+      }
+
+      @media (max-width: 600px) {
+        padding: 8px 15px;
+        bottom: 15px;
+        right: 15px;
+        font-size: 19px;
+      }
+    }
+  }
+
+  nav {
+    ul {
+      list-style: none;
+      padding-left: 25px;
+    }
+
+    li, summary {
+      margin-bottom: 0.2rem;
+    }
+
+    ol {
+      margin-bottom: 0.4rem !important;
+    }
+
+    a {
+      color: #000;
+
+      text-decoration: underline;
+
+      &.active {
+        color:  #b90f28;
+      }
+
+      &:hover{
+        color: #b90f28;
+      }
+    }
+
+    ol li::marker {
+      content: counters(list-item, '.') '. ';
+    }
+  }
+
+  .manual-navigation {
+    @media (min-width: 1600px) {
+      position: fixed;
+      left: 5px;
+      top: 10px;
+      max-width: 300px;
+    }
+  }
+
   section {
     margin-bottom: calc(3* var(--space));
     width: 100%;
-    max-width: 1050px;
+    max-width: 1000px;
     background: #fff;
 
     // Counter increments
@@ -89,6 +229,11 @@ ul, ul li, ol, ol li {
   page-break-inside: auto;
 }
 
+a {
+  word-break: break-word;
+  white-space: normal;
+}
+
 ul li {
   margin-bottom: .5rem;
 }
@@ -140,55 +285,39 @@ img {
   margin-bottom: calc(1 * var(--space));
 }
 
+// Responsive image and text layout
 .paragraph {
   margin-bottom: calc(1.5 * var(--space));
   display: flex;
   width: 100%;
 
-  &--type--manual-text-image-field-text {
-    width: 95%;
-    padding-right: 5%;
-  }
+  &--type--manual-text-image {
+    display: flex;
+    flex-direction: row;
 
-  &--type--manual-text-image-field-media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-nav {
-  position: fixed;
-  left: 20px;
-  max-width: 15%;
-  display: inline-block;
-  width: auto;
-  background: none;
-  margin-bottom: 0;
-
-  li, summary {
-    margin-bottom: 0.2rem;
-  }
-
-  ol {
-    margin-bottom: 0.4rem !important;
-  }
-
-  a {
-    color: #000;
-    word-wrap: break-word;
-    text-decoration: underline;
-
-    &.active {
-      color:  #b90f28;
+    @media (max-width: 700px) {
+      flex-direction: column-reverse;
     }
 
-    &:hover{
-      color: #b90f28;
+    &-field-text {
+      width: 95%;
+      padding-right: 5%;
+      padding: 10px;
+      flex: 1;
     }
-  }
 
-  ol li::marker {
-    content: counters(list-item, '.') '. ';
+    &-field-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      flex: 1;
+      padding: 10px;
+
+      img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+      }
+    }
   }
 }

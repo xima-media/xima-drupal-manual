@@ -5,24 +5,29 @@
  */
 function xm_drupal_manual_theme($existing, $type, $theme, $path)
 {
-  $book_export_html = $existing['book_export_html'];
-  $book_node_export_html = $existing['book_node_export_html'];
-  $paragraph = $existing['paragraph'];
+    $book_export_html = $existing['book_export_html'];
+    $book_node_export_html = $existing['book_node_export_html'];
+    $paragraph = $existing['paragraph'];
+    $field__node__title__book = $existing['field__node__title'];
 
-  $book_export_html['template'] = 'book-export-html--manual';
-  unset($book_export_html['path']);
+    $book_export_html['template'] = 'book-export-html--manual';
+    unset($book_export_html['path']);
 
-  $book_node_export_html['template'] = 'book-node-export-html--manual';
-  unset($book_node_export_html['path']);
+    $book_node_export_html['template'] = 'book-node-export-html--manual';
+    unset($book_node_export_html['path']);
 
-  $paragraph['template'] = 'paragraph--manual';
-  unset($paragraph['path']);
+    $paragraph['template'] = 'paragraph--manual';
+    unset($paragraph['path']);
 
-  return [
-    'book_export_html__manual' => $book_export_html,
-    'book_node_export_html__manual' => $book_node_export_html,
-    'paragraph__manual' => $paragraph
-  ];
+    $field__node__title__book['template'] = 'field--node--title--book';
+    unset($field__node__title__book['path']);
+
+    return [
+        'book_export_html__manual' => $book_export_html,
+        'book_node_export_html__manual' => $book_node_export_html,
+        'paragraph__manual' => $paragraph,
+        'field__node__title__book' => $field__node__title__book,
+    ];
 }
 
 /**
@@ -46,21 +51,17 @@ function xm_drupal_manual_theme_suggestions_book_export_html_alter(array &$sugge
  */
 function xm_drupal_manual_theme_suggestions_paragraph_alter(array &$suggestions, array &$variables, $hook)
 {
-  $suggestions[] = 'paragraph__manual';
+    if(str_contains(\Drupal::service('path.current')->getPath(), 'book')) {
+        $suggestions[] = 'paragraph__manual';
+    }
 }
-
 /**
  * Implements hook_local_tasks_alter().
  */
 function xm_drupal_manual_local_tasks_alter(&$local_tasks)
 {
-  // remove outline tab for book
-  $route = Drupal::routeMatch();
-  $type = $route->getParameter('node')->getType();
-
-  if ($type != 'book'){
+    // remove outline tab (Gliederung) for all nodes
     unset($local_tasks['entity.node.book_outline_form']);
-  }
 }
 
 /**
@@ -80,5 +81,5 @@ function xm_drupal_manual_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
 function xm_drupal_manual_preprocess_book_export_html(&$variables)
 {
     // path to module
-    $variables['path'] = Drupal::service('extension.list.module')->getPath('xm_drupal_manual');
+    $variables['path'] = \Drupal::service('extension.list.module')->getPath('xm_drupal_manual');
 }

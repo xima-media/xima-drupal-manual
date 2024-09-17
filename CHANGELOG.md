@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-- 
+### Fixed
+
+- error getType() on null for local_tasks on node creation
+- duplicated title display in book export context
+- unnecessary livereload script (removed)
+- responsive navigation styling
 
 ## [0.1.2] - 2024-06-28
 

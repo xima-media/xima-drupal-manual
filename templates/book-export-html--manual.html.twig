@@ -20,32 +20,34 @@
 #}
 <!DOCTYPE html>
 <html{{ html_attributes }}>
-  <head>
-    <title>{{ title }}</title>
-    {{ page.head }}
-    <base href="{{ base_url }}" />
-    <link type="text/css" rel="stylesheet" href='{{ base_url }}/{{ path }}/dist/css/base.css'/>
-    <script src="{{ base_url }}/{{ path }}/dist/js/main.js"></script>
-  </head>
-  <body>
+<head>
+  <title>{{ title }}</title>
+  {{ page.head }}
+  <base href="{{ base_url }}" />
+  <link type="text/css" rel="stylesheet" href='{{ base_url }}/{{ path }}/dist/css/base.css'/>
+  <script src="{{ base_url }}/{{ path }}/dist/js/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<script>
+  window.addEventListener('load', function() {
+    generateNestedNavigation();
+    backToTop();
+  });
+</script>
 
-  <script>
-    window.addEventListener('load', function() {
-      generateNavigation();
-      activateNavigationLinks();
-    });
-  </script>
+{#
+The given node is embedded to its absolute depth in a top level section.
+For example, a child node with depth 2 in the hierarchy is contained in
+(otherwise empty) div elements corresponding to depth 0 and depth 1. This
+is intended to support WYSIWYG output - e.g., level 3 sections always look
+like level 3 sections, no matter their depth relative to the node selected
+to be exported as printer-friendly HTML.
+#}
 
-  {#
-  The given node is embedded to its absolute depth in a top level section.
-  For example, a child node with depth 2 in the hierarchy is contained in
-  (otherwise empty) div elements corresponding to depth 0 and depth 1. This
-  is intended to support WYSIWYG output - e.g., level 3 sections always look
-  like level 3 sections, no matter their depth relative to the node selected
-  to be exported as printer-friendly HTML.
-  #}
-
-    <main>
+<main>
+  <div class="container">
+    <div class="book-section-wrapper">
       {% if depth > 1 %}{% for i in 1..depth - 1 %}
       <div>
         {% endfor %}{% endif %}
@@ -53,6 +55,9 @@
         {% if depth > 1 %}{% for i in 1..depth - 1 %}
       </div>
       {% endfor %}{% endif %}
-    </main>
-  </body>
+    </div>
+    <button id="back-to-top-btn" title="Go to top">↑</button>
+  </div>
+</main>
+</body>
 </html>

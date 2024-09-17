@@ -1,59 +1,236 @@
-function generateNavigation() {
-  // Attempt to select an existing main element
-  let main = document.querySelector('main');
+// function generateNestedNavigation() {
+//   const headers = document.querySelectorAll('section h2, section h3, section h4, section h5, section h6');
+//   const nav = document.createElement('nav');
+//   nav.classList.add('manual-navigation');
+//   let currentUl = document.createElement('ul');
+//   nav.appendChild(currentUl);
+//
+//   let numbering = [0, 0, 0, 0, 0]; // Array to keep track of counters for h2 to h6
+//   let lastLevel = 2; // Starting with h2 elements
+//   const headingToNavLink = new Map(); // Map to track heading IDs to nav links
+//
+//   headers.forEach((header) => {
+//     const level = parseInt(header.tagName.substring(1)); // Get level (2 for h2, 3 for h3, etc.)
+//     numbering[level - 2]++; // Increment the counter for this level
+//
+//     // Reset lower levels when a higher level tag is encountered
+//     for (let i = level - 1; i < numbering.length; i++) {
+//       numbering[i] = 0;
+//     }
+//
+//     const li = document.createElement('li');
+//     const a = document.createElement('a');
+//     const headerId = header.textContent.replace(/\s+/g, '_').toLowerCase();
+//
+//     header.id = headerId;
+//     a.href = `#${headerId}`;
+//     a.textContent = numbering.slice(0, level - 1).join('.') + '. ' + header.textContent;
+//     a.classList.add('nav-link'); // Add a class for styling
+//
+//     // Store a reference to the link
+//     headingToNavLink.set(headerId, a);
+//
+//     a.addEventListener('click', function(event) {
+//       event.preventDefault(); // Prevent the default anchor link behavior
+//       document.getElementById(headerId).scrollIntoView({
+//         behavior: 'smooth', // Smooth scrolling
+//         block: 'start' // Aligns the scrolled-to element at the top of the viewport
+//       });
+//     });
+//     li.appendChild(a);
+//
+//     if (level > lastLevel) {
+//       const newUl = document.createElement('ul');
+//       currentUl.lastChild.appendChild(newUl);
+//       currentUl = newUl;
+//     } else if (level < lastLevel) {
+//       // Climb up the ul hierarchy
+//       for (let i = level; i < lastLevel; i++) {
+//         currentUl = currentUl.parentNode.parentNode;
+//       }
+//     }
+//
+//     currentUl.appendChild(li);
+//     lastLevel = level;
+//   });
+//
+//   // Insert the <nav> element after each <h1>
+//   const h1Elements = document.querySelectorAll('section h1');
+//   h1Elements.forEach(h1 => {
+//     h1.insertAdjacentElement('afterend', nav); // Insert the nav element after each <h1>
+//   });
+//
+//   // Set up Intersection Observer
+//   let currentActiveNavLink = null; // Track the currently active navigation link
+//
+//   const observer = new IntersectionObserver((entries) => {
+//     let closestEntry = null;
+//
+//     entries.forEach(entry => {
+//       if (entry.isIntersecting) {
+//         // Determine if this entry should be considered as closest
+//         if (!closestEntry || entry.boundingClientRect.top < closestEntry.boundingClientRect.top) {
+//           closestEntry = entry;
+//         }
+//       }
+//     });
+//
+//     if (closestEntry) {
+//       // Update the active class based on the closest entry
+//       const id = closestEntry.target.id;
+//       const navLink = headingToNavLink.get(id);
+//
+//       if (currentActiveNavLink && currentActiveNavLink !== navLink) {
+//         currentActiveNavLink.classList.remove('active');
+//       }
+//
+//       navLink.classList.add('active');
+//       currentActiveNavLink = navLink;
+//     }
+//   }, {
+//     threshold: 0.5, // Trigger when at least 50% of the heading is visible
+//     rootMargin: '0px 0px -50% 0px' // Adjust the margins if needed
+//   });
+//
+//   // Observe each heading
+//   headers.forEach(heading => {
+//     observer.observe(heading);
+//   });
+// }
 
-  // If there isn't a main element, create one and append it to the body
-  if (!main) {
-    main = document.createElement('main');
-    document.body.appendChild(main);
-  }
+function generateNestedNavigation() {
+  const headers = document.querySelectorAll('section h2, section h3, section h4, section h5, section h6');
 
-  const baseUrl = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
-  const navContainer = document.createElement('nav');
-  // Append the nav container to the main element instead of the body
-  main.insertBefore(navContainer, main.firstChild);
+  // Create the nav container
+  const navContainer = document.createElement('div');
+  navContainer.classList.add('nav-container');
 
-  const navList = document.createElement('ol');
-  navContainer.appendChild(navList);
+  // Create the hamburger menu button
+  const hamburgerButton = document.createElement('button');
+  hamburgerButton.classList.add('hamburger-menu');
+  hamburgerButton.innerHTML = '&#9776;'; // Hamburger icon
 
-  function createNavItem(section) {
-    // Create a link for the current section
-    const link = document.createElement('a');
-    link.href = baseUrl + '#' + section.id;
-    link.textContent = section.querySelector('h1, h2, h3, h4, h5, h6').textContent.trim();
+  // Create the nav element
+  const nav = document.createElement('nav');
+  nav.classList.add('manual-navigation');
+  let currentUl = document.createElement('ul');
+  nav.appendChild(currentUl);
 
-    const listItem = document.createElement('li');
-    listItem.appendChild(link);
-    return listItem;
-  }
+  let numbering = [0, 0, 0, 0, 0]; // Array to keep track of counters for h2 to h6
+  let lastLevel = 2; // Starting with h2 elements
+  const headingToNavLink = new Map(); // Map to track heading IDs to nav links
 
-  function buildNavigationList(container, sections) {
-    sections.forEach(section => {
-      const item = createNavItem(section);
-      container.appendChild(item);
+  headers.forEach((header) => {
+    const level = parseInt(header.tagName.substring(1)); // Get level (2 for h2, 3 for h3, etc.)
+    numbering[level - 2]++; // Increment the counter for this level
 
-      // Check if there are nested sections within the current section
-      const nestedSections = Array.from(section.children).filter(child => child.tagName.toLowerCase() === 'section');
-      if (nestedSections.length > 0) {
-        const sublist = document.createElement('ul');
-        item.appendChild(sublist);
-        buildNavigationList(sublist, nestedSections);
+    // Reset lower levels when a higher level tag is encountered
+    for (let i = level - 1; i < numbering.length; i++) {
+      numbering[i] = 0;
+    }
+
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const headerId = header.textContent.replace(/\s+/g, '_').toLowerCase();
+
+    header.id = headerId;
+    a.href = `#${headerId}`;
+    a.textContent = numbering.slice(0, level - 1).join('.') + '. ' + header.textContent;
+    a.classList.add('nav-link'); // Add a class for styling
+
+    // Store a reference to the link
+    headingToNavLink.set(headerId, a);
+
+    a.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default anchor link behavior
+      document.getElementById(headerId).scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling
+        block: 'start' // Aligns the scrolled-to element at the top of the viewport
+      });
+    });
+    li.appendChild(a);
+
+    if (level > lastLevel) {
+      const newUl = document.createElement('ul');
+      currentUl.lastChild.appendChild(newUl);
+      currentUl = newUl;
+    } else if (level < lastLevel) {
+      // Climb up the ul hierarchy
+      for (let i = level; i < lastLevel; i++) {
+        currentUl = currentUl.parentNode.parentNode;
+      }
+    }
+
+    currentUl.appendChild(li);
+    lastLevel = level;
+  });
+
+  // Insert the hamburger button and nav into the nav container
+  navContainer.appendChild(hamburgerButton);
+  navContainer.appendChild(nav);
+
+  // Insert the <nav-container> element after each <h1>
+  const h1Elements = document.querySelectorAll('section h1');
+  h1Elements.forEach(h1 => {
+    h1.insertAdjacentElement('afterend', navContainer); // Insert the nav container after each <h1>
+  });
+
+  // Set up Intersection Observer
+  let currentActiveNavLink = null; // Track the currently active navigation link
+
+  const observer = new IntersectionObserver((entries) => {
+    let closestEntry = null;
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Determine if this entry should be considered as closest
+        if (!closestEntry || entry.boundingClientRect.top < closestEntry.boundingClientRect.top) {
+          closestEntry = entry;
+        }
       }
     });
-  }
 
-  // Find the top-level section that contains the h1, then start with its immediate section children
-  const topLevelSection = document.querySelector('section h1').closest('section');
-  const sectionsUnderTopLevel = Array.from(topLevelSection.children).filter(child => child.tagName.toLowerCase() === 'section');
-  buildNavigationList(navList, sectionsUnderTopLevel);
+    if (closestEntry) {
+      // Update the active class based on the closest entry
+      const id = closestEntry.target.id;
+      const navLink = headingToNavLink.get(id);
+
+      if (currentActiveNavLink && currentActiveNavLink !== navLink) {
+        currentActiveNavLink.classList.remove('active');
+      }
+
+      navLink.classList.add('active');
+      currentActiveNavLink = navLink;
+    }
+  }, {
+    threshold: 0.5, // Trigger when at least 50% of the heading is visible
+    rootMargin: '0px 0px -50% 0px' // Adjust the margins if needed
+  });
+
+  // Observe each heading
+  headers.forEach(heading => {
+    observer.observe(heading);
+  });
+
+  // Add an event listener to the hamburger menu to toggle the navigation
+  hamburgerButton.addEventListener('click', function() {
+    nav.classList.toggle('open');
+  });
 }
 
-function activateNavigationLinks() {
-  const navLinks = document.querySelectorAll('nav a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
+function backToTop() {
+  // Show or hide the button
+  window.onscroll = function() {
+    var btn = document.getElementById("back-to-top-btn");
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+      btn.style.display = "block";
+    } else {
+      btn.style.display = "none";
+    }
+  };
+
+// Scroll to top on click
+  document.getElementById("back-to-top-btn").onclick = function() {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 }
